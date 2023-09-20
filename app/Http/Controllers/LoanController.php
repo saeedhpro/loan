@@ -137,7 +137,7 @@ class LoanController extends Controller
                 'amount' => $user->amount + $loan->amount,
             ]);
             DB::commit();
-            event(new ActionOnLoanRequestDoneEvent());
+            event(new ActionOnLoanRequestDoneEvent($loan));
             return redirect()->back()->withInput($request->all())->withErrors(['error' => '', 'status' => true])->with(['error' => '', 'status' => true]);
         } catch (\Exception $exception) {
             DB::rollBack();
