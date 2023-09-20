@@ -31,4 +31,18 @@ class LoanRepository extends BaseRepository implements LoanInterface
         }
         return $query;
     }
+
+    public function getStatistics()
+    {
+        $total = $this->model->newQuery()->where('status', 'accepted')->sum('amount');
+        $rejected = $this->model->newQuery()->where('status', 'rejected')->count();
+        $accepted = $this->model->newQuery()->where('status', 'accepted')->count();
+        $created = $this->model->newQuery()->where('status', 'created')->count();
+        return [
+          'total' => $total,
+          'rejected' => $rejected,
+          'accepted' => $accepted,
+          'created' => $created,
+        ];
+    }
 }

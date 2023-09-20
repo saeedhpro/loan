@@ -32,12 +32,12 @@
             <main>
                 <div class="py-12">
                     <div class="flex flex-row max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg sm:w-full md:w-1/4 ml-1.5">
+                        <div class="bg-white hidden md:flex overflow-hidden shadow-sm md:rounded-lg md:w-1/4 ml-1.5">
                             <div class="p-6 text-gray-900">
                                 <x-global-links></x-global-links>
                             </div>
                         </div>
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg sm:w-full md:w-3/4">
+                        <div class="bg-white overflow-hidden shadow-sm md:rounded-lg w-full md:w-3/4">
                             {{ $slot }}
                         </div>
                     </div>
