@@ -82,4 +82,10 @@ class Controller extends BaseController
         $auth = Auth::user();
         return $auth;
     }
+
+    public function can($permission): bool
+    {
+        $auth = $this->getAuth();
+        return $auth->hasPermission($permission);
+    }
 }

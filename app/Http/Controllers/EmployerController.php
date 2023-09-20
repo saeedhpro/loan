@@ -26,6 +26,9 @@ class EmployerController extends Controller
 
     public function index()
     {
+        if (!$this->can('index_employers')) {
+            abort(403);
+        }
         $page = $this->getPage();
         $limit = $this->getLimit();
         $users = $this->userRepository->findByOrderPaginate([
@@ -38,6 +41,9 @@ class EmployerController extends Controller
 
     public function create()
     {
+        if (!$this->can('create_employer')) {
+            abort(403);
+        }
         $roles = [
             [
                 'name' => 'مدیرکل',
@@ -56,6 +62,9 @@ class EmployerController extends Controller
 
     public function store(EmployerCreateRequest $request)
     {
+        if (!$this->can('create_employer')) {
+            abort(403);
+        }
         $roles = [
             [
                 'name' => 'مدیرکل',
@@ -93,6 +102,9 @@ class EmployerController extends Controller
 
     public function edit(int $id)
     {
+        if (!$this->can('edit_employer')) {
+            abort(403);
+        }
         $user = $this->userRepository->findOneOrFail($id);
         $roles = [
             [
@@ -112,6 +124,9 @@ class EmployerController extends Controller
 
     public function update(EmployerUpdateRequest $request, int $id)
     {
+        if (!$this->can('edit_employer')) {
+            abort(403);
+        }
         $roles = [
             [
                 'name' => 'مدیرکل',
@@ -154,6 +169,9 @@ class EmployerController extends Controller
 
     public function destroy(int $id)
     {
+        if (!$this->can('delete_employer')) {
+            abort(403);
+        }
         $this->userRepository->delete($id);
         return redirect()->back();
     }

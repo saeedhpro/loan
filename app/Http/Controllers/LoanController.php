@@ -27,6 +27,9 @@ class LoanController extends Controller
 
     public function index()
     {
+        if (!$this->can('request_loan')) {
+            abort(403);
+        }
         $status = \request()->get('status') ?? '';
         $from = \request()->get('from') ?? '';
         $to = \request()->get('to') ?? '';
@@ -52,6 +55,9 @@ class LoanController extends Controller
 
     public function loanRequests()
     {
+        if (!$this->can('index_request_loans')) {
+            abort(403);
+        }
         $status = \request()->get('status') ?? '';
         $userId = \request()->get('user_id') ?? '';
         $from = \request()->get('from') ?? '';
@@ -77,6 +83,9 @@ class LoanController extends Controller
 
     public function showRequestLoan()
     {
+        if (!$this->can('request_loan')) {
+            abort(403);
+        }
         $success = false;
         $error = '';
         return view('loans.request', compact('success', 'error'));
@@ -84,6 +93,9 @@ class LoanController extends Controller
 
     public function store(LoanRequest $request)
     {
+        if (!$this->can('request_loan')) {
+            abort(403);
+        }
         $auth = $this->getAuth();
         if ($auth->loans()->where('status', 'created')->count() > 0) {
             $error = 'شما یک درخواست وام بررسی نشده دارید';
@@ -103,6 +115,9 @@ class LoanController extends Controller
 
     public function show(int $id)
     {
+        if (!$this->can('request_loan') && !$this->can('index_request_loans')) {
+            abort(403);
+        }
         $loan = $this->loanRepository->findOneOrFail($id);
         $success = false;
         $error = '';
@@ -111,6 +126,9 @@ class LoanController extends Controller
 
     public function action(LoanActionRequest $request, int $id)
     {
+        if (!$this->can('accept_reject_loan')) {
+            abort(403);
+        }
         $auth = $this->getAuth();
         /** @var Loan $loan */
         $loan = $this->loanRepository->findOneOrFail($id);
