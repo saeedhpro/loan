@@ -19,8 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'username',
+        'role',
         'password',
+        'last_name',
+        'position',
+        'amount',
     ];
 
     /**
@@ -39,7 +43,74 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    protected $appends = [
+        'is_admin',
+        'is_employer',
+        'permission_id_list',
+        'full_name',
+    ];
+
+    public function getIsAdminAttribute()
+    {
+        return $this->role == 'admin';
+    }
+
+    public function getIsEmployerAttribute()
+    {
+        return $this->role == 'employer';
+    }
+
+    public function getFullNameAttribute()
+    {
+        $name = $this->name;
+        $lastName = $this->last_name;
+        return "$name $lastName";
+    }
+
+    public function getPermissionIdListAttribute()
+    {
+        return $this->permissions()->pluck('permissions.id')->toArray();
+    }
+
+    public function hasAllPermissions(array $permissions)
+    {
+        $hasAll = true;
+        foreach ($permissions as $permission) {
+            if (!$this->hasPermission($permission)) {
+                $hasAll = false;
+                break;
+            }
+        }
+        return $hasAll;
+    }
+
+    public function hasAnyPermissions(array $permissions)
+    {
+        $hasAll = false;
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
+                $hasAll = true;
+                break;
+            }
+        }
+        return $hasAll;
+    }
+
+    public function hasPermission(string $permission)
+    {
+        return in_array($permission, $this->permissions()->pluck('permission')->toArray());
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'permission_user');
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }
